@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+
+<div>
+    <div>
+        <input type="number" id="rowSize">x<input type="number" id="colSize"><br>
+        <button id="createBtn">create</button>
+        <button id="clearBtn">clear</button>
+        <button id="simpleBtn">simple</button>
+        <button>det</button>
+        <button>inv</button>
+        <button>solve</button>
+    </div>
+    <div id="inputDiv">
+        <table id="inputTable"></table>
+    </div>
+    <div id="outputDiv">
+        When \(a \ne 0\), there are two solutions to \(ax^2 + bx + c = 0\) and they are
+        \[x = {-b \pm \sqrt{b^2-4ac} \over 2a}.\]
+    </div>
+</div>
+
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script>
+
+function getRowCol() {
+    return { row: parseInt($("#rowSize").val()), col: parseInt($("#colSize").val()) }
+}
+
+function clear() {
+    $("#inputTable").empty()
+}
+
+$("#clearBtn").click(function () {
+    clear()
+})
+
+$("#createBtn").click(function () {
+    clear();
+    let rowCol = getRowCol();
+
+    for (let i = 0; i < rowCol.row; i++) {
+        let rowStr = "<tr>";
+        for (let j = 0; j < rowCol.col; j++) {
+            rowStr += "<td><input id=" + i + "_" + j + "/></td>"
+        }
+        rowStr += "</tr>";
+        $("#inputTable").append(rowStr)
+    }
+})
+
+function getMat() {
+    let rowCol = getRowCol();
+
+    var mat = new Array(rowCol.row);
+    for (var i = 0; i < rowCol.row; i++) {
+        mat[i] = new Array(rowCol.col)
+    }
+
+    for (let i = 0; i < rowCol.row; i++) {
+        for (let j = 0; j < rowCol.col; j++) {
+            mat[i][j] = $("#" + i + "_" + j).val()
+        }
+    }
+
+    return mat
+}
+
+$("#simpleBtn").click(function () {
+    let mat = getMat();
+
+    $("#outputDiv").empty();
+/*
+    $.ajax({
+        url: "row_simple",
+        data: {
+            mat: mat
+        },
+        type: "POST",
+        dataType: "json",
+        success: function (result) {
+            r = eval('(' + result + ')')
+            for (let i = 0; i < r.length; i++) {
+                $("#process").append("" + r[i].s + ": \n");
+                let str = "";
+                for (let j = 0; j < row; j++) {
+                    str = "";
+                    j_col = j * col
+                    for (let k = 0; k < col; k++) {
+                        str += (r[i].r)[k + j_col];
+                        if (k < col - 1) {
+                            str += ", "
+                        }
+                    }
+                    $("#process").append(str + "\n");
+                }
+            }
+        },
+        error: function (e) {
+            console.log(e)
+        }
+    })
+*/
+})
+
+
+</script>
+</body>
+</html>
